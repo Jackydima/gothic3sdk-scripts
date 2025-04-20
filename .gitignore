@@ -1,0 +1,17 @@
+*.ncb
+*.suo
+*.user
+*.sdf
+*.opensdf
+*.vs/
+
+.cache
+/build
+/build-*
+/cmake-build-*
+
+compile_commands.json
+
+# Sublime Text
+*.sublime-project
+*.sublime-workspace
