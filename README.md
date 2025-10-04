@@ -1,5 +1,5 @@
 # Forked from gothic3sdk-examples 
-For available at https://github.com/georgeto/gothic3sdk-examples
+Fork available at https://github.com/georgeto/gothic3sdk-examples
 
 # Gothic 3 SDK Examples
 Examples demonstrating how to use the [Gothic 3 SDK](https://github.com/georgeto/gothic3sdk).
