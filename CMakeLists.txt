@@ -23,5 +23,6 @@ CPMAddPackage(
 include(${gothic3sdk_SOURCE_DIR}/cmake/Setup.cmake)
 
 add_subdirectory(examples)
+add_subdirectory(scripts)
 
 add_subdirectory(thirdparty EXCLUDE_FROM_ALL)
