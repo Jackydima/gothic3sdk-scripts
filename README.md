@@ -29,3 +29,4 @@ All code, except  third-party code, is formatted with clang-format according to 
 * [protobuf](https://github.com/protocolbuffers/protobuf)
 * [ZeroMQ](https://github.com/zeromq/zeromq4-x)
 * [PCG](http://www.pcg-random.org/)
+* [Github-Georgeto](https://github.com/georgeto)
