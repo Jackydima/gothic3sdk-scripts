@@ -1,3 +1,6 @@
+# Forked from gothic3sdk-examples 
+For available at https://github.com/georgeto/gothic3sdk-examples
+
 # Gothic 3 SDK Examples
 Examples demonstrating how to use the [Gothic 3 SDK](https://github.com/georgeto/gothic3sdk).
 
@@ -6,8 +9,8 @@ The Gothic 3 SDK examples are built with [CMake](https://cmake.org/).
 
 To download and build the Gothic 3 SDK examples (here using Visual Studio 2022) execute the following commands:
 ```cmd
-git clone https://github.com/georgeto/gothic3sdk-examples
-cd gothic3sdk
+git clone https://github.com/georgeto/gothic3sdk-scripts
+cd gothic3sdk-scripts
 cmake -S . -B build -G "Visual Studio 17 2022" -A Win32
 cmake --build build --config Release -j
 ```
