@@ -38,25 +38,27 @@ DECLARE_SCRIPT(IsBotheredByPlayerTheftOf)
     {
         if (owner.NPC.Type == gENPCType_Friend) // Close friend type
         {
-            Hook_IsBotheredByPlayerTheftOf.GetOriginalFunction (&IsBotheredByPlayerTheftOf)(a_pSPU, a_pSelfEntity,
-                                                                                            a_pOtherEntity, a_iArgs);
+            return Hook_IsBotheredByPlayerTheftOf.GetOriginalFunction(&IsBotheredByPlayerTheftOf)(
+                a_pSPU, a_pSelfEntity, a_pOtherEntity, a_iArgs);
         }
 
         // If NPCs in Range are befriended with the Owner
         gEAttitude att = static_cast<gEAttitude>(RUN_SCRIPT("GetAttitude", a_pSelfEntity, &owner, 0));
-
+#ifndef NDEBUG
+        std::cout << "Friends?: " << att << "\n"; 
+#endif
         switch (att)
         {
-        case gEAttitude_Friendly: return GETrue;
+        case gEAttitude_Friendly:  return GETrue;
         default:
-            Hook_IsBotheredByPlayerTheftOf.GetOriginalFunction (&IsBotheredByPlayerTheftOf)(a_pSPU, a_pSelfEntity,
-                                                                                            a_pOtherEntity, a_iArgs);
+            return Hook_IsBotheredByPlayerTheftOf.GetOriginalFunction(&IsBotheredByPlayerTheftOf)(
+                a_pSPU, a_pSelfEntity, a_pOtherEntity, a_iArgs);
         }
 
         if (Self != owner)
         {
-            Hook_IsBotheredByPlayerTheftOf.GetOriginalFunction (&IsBotheredByPlayerTheftOf)(a_pSPU, a_pSelfEntity,
-                                                                                            a_pOtherEntity, a_iArgs);
+            return Hook_IsBotheredByPlayerTheftOf.GetOriginalFunction(&IsBotheredByPlayerTheftOf)(
+                a_pSPU, a_pSelfEntity, a_pOtherEntity, a_iArgs);
         }
         return GETrue;
     }
