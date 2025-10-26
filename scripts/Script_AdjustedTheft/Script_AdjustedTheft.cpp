@@ -42,25 +42,22 @@ DECLARE_SCRIPT(IsBotheredByPlayerTheftOf)
                 a_pSPU, a_pSelfEntity, a_pOtherEntity, a_iArgs);
         }
 
-        // If NPCs in Range are befriended with the Owner
+        // Owners are getting mad at player
+        if (Self == owner)
+        {
+            return GETrue;
+        }
+
+        // If NPCs in Range are befriended with the Owner they do too
         gEAttitude att = static_cast<gEAttitude>(RUN_SCRIPT("GetAttitude", a_pSelfEntity, &owner, 0));
 #ifndef NDEBUG
         std::cout << "Friends?: " << att << "\n"; 
 #endif
-        switch (att)
-        {
-        case gEAttitude_Friendly:  return GETrue;
-        default:
-            return Hook_IsBotheredByPlayerTheftOf.GetOriginalFunction(&IsBotheredByPlayerTheftOf)(
-                a_pSPU, a_pSelfEntity, a_pOtherEntity, a_iArgs);
-        }
+        if (gEAttitude_Friendly)
+            return GETrue;
 
-        if (Self != owner)
-        {
-            return Hook_IsBotheredByPlayerTheftOf.GetOriginalFunction(&IsBotheredByPlayerTheftOf)(
-                a_pSPU, a_pSelfEntity, a_pOtherEntity, a_iArgs);
-        }
-        return GETrue;
+        return Hook_IsBotheredByPlayerTheftOf.GetOriginalFunction(&IsBotheredByPlayerTheftOf)(a_pSPU, a_pSelfEntity,
+                                                                                              a_pOtherEntity, a_iArgs);
     }
 
     // Enclave?!
