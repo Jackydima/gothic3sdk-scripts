@@ -97,7 +97,7 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD dwReason, LPVOID)
 #ifndef NDEBUG
         AllocConsole();
         freopen_s((FILE **)stdout, "CONOUT$", "w", stdout);
-#endif //  NDEBUG
+#endif // !NDEBUG
         ::DisableThreadLibraryCalls(hModule);
         break;
     case DLL_PROCESS_DETACH: break;
