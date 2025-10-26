@@ -53,7 +53,7 @@ DECLARE_SCRIPT(IsBotheredByPlayerTheftOf)
 #ifndef NDEBUG
         std::cout << "Friends?: " << att << "\n"; 
 #endif
-        if (gEAttitude_Friendly)
+        if (att == gEAttitude_Friendly)
             return GETrue;
 
         return Hook_IsBotheredByPlayerTheftOf.GetOriginalFunction(&IsBotheredByPlayerTheftOf)(a_pSPU, a_pSelfEntity,
