@@ -1,13 +1,14 @@
 #include "Script_UI.h"
+
 #include "Script.h"
 
-gSScriptInit & GetScriptInit()
+gSScriptInit &GetScriptInit()
 {
     static gSScriptInit s_ScriptInit;
     return s_ScriptInit;
 }
 
-EXPGUI* g_EXPGUI;
+EXPGUI *g_EXPGUI;
 
 /*static mCFunctionHook Hook_DoDataExchange;
 void DoDataExchange ( CFFGFCDataExchange* data ) {
@@ -32,20 +33,34 @@ void OnPageChangedInventory ( gEHUDPage newPage , gEHUDPage oldPage ) {
         expBar.SetPos ( 90 );
     }
 }*/
-
-extern "C" __declspec( dllexport )
-gSScriptInit const * GE_STDCALL ScriptInit( void )
+static mCFunctionHook Hook_OnPageChangedMain;
+void OnPageChangedMain(gEHUDPage newPage, gEHUDPage oldPage)
 {
-    g_EXPGUI = GE_NEW ( EXPGUI );
-    CFFGFCWnd* mainDialog = (*(CFFGFCWnd**)(gCSession::GetInstance ( ).GetGUIManager ( ) + 1)); // Address + 0x4!
-    std::cout << "mainDialog: " << mainDialog << "\n";
-    CFFGFCWnd* pageMain = ( *( CFFGFCWnd** )(( DWORD )mainDialog + 0x7C ));
-    CFFGFCWnd* pageInventory = ( *( CFFGFCWnd** )(( DWORD )mainDialog + 0x38 ));
-    CFFGFCWnd* pageSkills = ( *( CFFGFCWnd** )(( DWORD )mainDialog + 0x44 ));
-    CFFGFCWnd* pageCharacter = ( *( CFFGFCWnd** )( ( DWORD )pageInventory + 0x4C ) );
+    Hook_OnPageChangedMain.GetOriginalFunction (&OnPageChangedMain)(newPage, oldPage);
+    if (newPage != -1 && newPage != 0 && newPage != 3)
+    {
+        //g_EXPGUI->ShowWindow(GEFalse);
+        g_EXPGUI->AnimateWindow(200, 0x90000);
+    }
+    else
+    {
+        //g_EXPGUI->ShowWindow(GETrue);
+        g_EXPGUI->AnimateWindow(200, 0xA0000);
+    }
+}
 
-    CFFGFCWnd* viewBarHealth = ( *( CFFGFCWnd** )( ( DWORD )pageMain + 0x60 ) );
-    
+extern "C" __declspec(dllexport) gSScriptInit const *GE_STDCALL ScriptInit(void)
+{
+    g_EXPGUI = GE_NEW(EXPGUI);
+    CFFGFCWnd *mainDialog = (*(CFFGFCWnd **)(gCSession::GetInstance().GetGUIManager() + 1)); // Address + 0x4!
+    std::cout << "mainDialog: " << mainDialog << "\n";
+    CFFGFCWnd *pageMain = (*(CFFGFCWnd **)((DWORD)mainDialog + 0x7C));
+    CFFGFCWnd *pageInventory = (*(CFFGFCWnd **)((DWORD)mainDialog + 0x38));
+    CFFGFCWnd *pageSkills = (*(CFFGFCWnd **)((DWORD)mainDialog + 0x44));
+    CFFGFCWnd *pageCharacter = (*(CFFGFCWnd **)((DWORD)pageInventory + 0x4C));
+
+    CFFGFCWnd *viewBarHealth = (*(CFFGFCWnd **)((DWORD)pageMain + 0x60));
+
     /*Hook_DoDataExchange
         .Prepare ( LPVOID ( RVA_Game ( 0x7e5e0 ) ) , &DoDataExchange , mCBaseHook::mEHookType_ThisCall )
         .Hook ( );
@@ -58,18 +73,22 @@ gSScriptInit const * GE_STDCALL ScriptInit( void )
         .Prepare ( LPVOID ( RVA_Game ( 0x89170 ) ) , &OnPageChangedSkills , mCBaseHook::mEHookType_ThisCall )
         .Hook ( );*/
 
-    //pageCharacter->UpdateData ( GEFalse );
+    Hook_OnPageChangedMain.Prepare(LPVOID(RVA_Game(0x88a30)), &OnPageChangedMain, mCBaseHook::mEHookType_ThisCall)
+        .Hook();
+
+    // pageCharacter->UpdateData ( GEFalse );
 
     bCRect clientRect;
-    g_EXPGUI->GetDesktopWindow ( )->GetClientRect ( clientRect );
-    g_EXPGUI->Create ( clientRect , mainDialog , 1000 );
-    //g_EXPGUI->InitLocation ( mainPage );
-    if ( !g_EXPGUI->expLocation.SubclassDlgItem ( pageMain , IDC_STATIC_EXP ) ) {
+    g_EXPGUI->GetDesktopWindow()->GetClientRect(clientRect);
+    g_EXPGUI->Create(clientRect, mainDialog, 1000);
+    // g_EXPGUI->InitLocation ( mainPage );
+    if (!g_EXPGUI->expLocation.SubclassDlgItem(pageMain, IDC_STATIC_EXP))
+    {
         std::cout << "Issue with expLocation: " << &g_EXPGUI->expLocation << "\n";
-        return &GetScriptInit ( );
+        return &GetScriptInit();
     }
-    g_EXPGUI->OnInitDialog ( );
-    g_EXPGUI->ShowWindow ( GETrue );
+    g_EXPGUI->OnInitDialog();
+    g_EXPGUI->ShowWindow(GETrue);
 
     return &GetScriptInit();
 }
@@ -78,18 +97,16 @@ gSScriptInit const * GE_STDCALL ScriptInit( void )
 // Entry Point
 //
 
-BOOL APIENTRY DllMain( HMODULE hModule, DWORD dwReason, LPVOID )
+BOOL APIENTRY DllMain(HMODULE hModule, DWORD dwReason, LPVOID)
 {
-    switch( dwReason )
+    switch (dwReason)
     {
     case DLL_PROCESS_ATTACH:
-        AllocConsole ( );
-        freopen_s ( ( FILE** )stdout , "CONOUT$" , "w" , stdout );
-        ::DisableThreadLibraryCalls( hModule );
+        AllocConsole();
+        freopen_s((FILE **)stdout, "CONOUT$", "w", stdout);
+        ::DisableThreadLibraryCalls(hModule);
         break;
-    case DLL_PROCESS_DETACH:
-        GE_DELETE ( g_EXPGUI );
-        break;
+    case DLL_PROCESS_DETACH: GE_DELETE(g_EXPGUI); break;
     }
     return TRUE;
 }

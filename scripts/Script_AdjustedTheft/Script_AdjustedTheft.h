@@ -1,13 +1,10 @@
 #pragma once
-
-#include "EXP_GUI.h"
-#include "Script.h"
-
+#include <g3sdk/Script.h>
 #include <g3sdk/util/Hook.h>
 #include <g3sdk/util/Logging.h>
 #include <g3sdk/util/Memory.h>
 #include <g3sdk/util/Module.h>
 
-GEInt NeededXP(GEInt level);
+#include <iostream>
 
-gSScriptInit &GetScriptInit();
+extern "C" __declspec(dllexport) gSScriptInit const *GE_STDCALL ScriptInit(void);
